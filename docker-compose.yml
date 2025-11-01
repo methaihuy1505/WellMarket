@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./be
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./be:/var/www
+    depends_on:
+      - db
+    networks:
+      - appnet
+
+  frontend:
+    build: ./fe
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./fe:/app
+    networks:
+      - appnet
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: wellmarket
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - appnet
+
+volumes:
+  mysql_data:
+
+networks:
+  appnet:
