@@ -17,10 +17,6 @@ function LoginModalContent({ onClose }) {
     }, 200);
   };
 
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
-  };
-
   const validatePhone = (value) => {
     const regex = /^0\d{9}$/;
     if (!value) return "Vui lòng nhập số điện thoại";
@@ -66,10 +62,7 @@ function LoginModalContent({ onClose }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-      onClick={handleOverlayClick}
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
       <div
         className="bg-white rounded-xl shadow-md w-[380px] p-6 relative animate-fade-in"
         onClick={(e) => e.stopPropagation()}
