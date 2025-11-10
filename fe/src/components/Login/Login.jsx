@@ -144,6 +144,12 @@ function LoginModalContent({ onClose }) {
             Liên hệ hỗ trợ
           </a>
         </div>
+        <button
+          onClick={onClose}
+          className="absolute font-semibold top-3 right-3 text-gray-500 hover:text-black hover:font-extrabold "
+        >
+          ✕
+        </button>
       </div>
     </div>
   );
