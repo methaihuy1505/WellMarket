@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named 
 import { RegisterModal } from "./Register";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import { GoogleLogin } from '@react-oauth/google';
 
 function LoginModalContent({ onClose }) {
   const [phone, setPhone] = useState("");
@@ -16,6 +17,16 @@ function LoginModalContent({ onClose }) {
       RegisterModal.show(); // mở modal đăng ký
     }, 200);
   };
+
+//  const googleLogin = GoogleLogin({
+//     onSuccess: tokenResponse => {
+//       console.log(tokenResponse); // chứa access_token
+//     },
+//     onError: () => {
+//       console.log('Login Failed');
+//     },
+//   });
+
 
   const validatePhone = (value) => {
     const regex = /^0\d{9}$/;
@@ -61,6 +72,7 @@ function LoginModalContent({ onClose }) {
     onClose(); // đóng modal
   };
 
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
       <div
@@ -70,8 +82,9 @@ function LoginModalContent({ onClose }) {
         <h2 className="text-center text-lg font-semibold mb-4">
           Đăng nhập WellMarket
         </h2>
-
-        <button className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2">
+        <button className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2"
+               // onClick={()=>googleLogin()}
+        >
           <img
             src="https://www.svgrepo.com/show/355037/google.svg"
             className="w-5 h-5 mr-2"
@@ -79,7 +92,6 @@ function LoginModalContent({ onClose }) {
           />
           Tiếp tục với Google
         </button>
-
         <div className="flex items-center my-3">
           <hr className="flex-grow border-gray-300" />
           <span className="px-2 text-sm text-gray-500">Hoặc</span>
