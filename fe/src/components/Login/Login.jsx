@@ -50,7 +50,7 @@ function LoginModalContent({ onClose }) {
 
     //gửi = axios
     axios
-      .post("http://localhost:8000/login", data)
+      .post("http://localhost:8000/api/login", data)
       .then((res) => {
         console.log("Server trả về:", res.data);
       })
