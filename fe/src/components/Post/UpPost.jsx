@@ -320,7 +320,6 @@ export default function CreatePostForm() {
         description: "",
         warranty: "",
         price: "",
-        priceRaw: "",
         condition: "",
         address: "",
         phone: "",
