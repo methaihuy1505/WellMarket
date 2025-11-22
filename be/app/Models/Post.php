@@ -7,6 +7,7 @@ use App\Enums\PostStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Post extends Model
 {
@@ -73,18 +74,18 @@ class Post extends Model
 
     public function favorites()
     {
-        return $this->interactions()->where('interaction', InteractionType::FAVORITE);
+        return $this->interactions()->where('interaction_type', InteractionType::FAVORITE);
     }
 
     public function reports()
     {
-        return $this->interactions()->where('interaction', InteractionType::REPORT);
+        return $this->interactions()->where('interaction_type', InteractionType::REPORT);
 
     }
 
     public function feedbacks()
     {
-        return $this->interactions()->where('interaction', InteractionType::FEEDBACK);
+        return $this->interactions()->where('interaction_type', InteractionType::FEEDBACK);
     }
 
 }

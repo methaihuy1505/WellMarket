@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named import createRoot
-import { RegisterModal } from "./Register";
-import bcrypt from "bcryptjs";
+import { RegisterModal } from "./RegisterModal";
 import axios from "axios";
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 
 function LoginModalContent({ onClose }) {
   const [phone, setPhone] = useState("");
   const [error, setPhoneError] = useState("");
   const [pswd, setPassword] = useState("");
   const [errorPwd, setErrorPwd] = useState("");
+  const [serverError, setServerError] = useState("");
 
   const handleRegisterClick = () => {
     onClose(); // đóng modal login
@@ -18,15 +18,14 @@ function LoginModalContent({ onClose }) {
     }, 200);
   };
 
-//  const googleLogin = GoogleLogin({
-//     onSuccess: tokenResponse => {
-//       console.log(tokenResponse); // chứa access_token
-//     },
-//     onError: () => {
-//       console.log('Login Failed');
-//     },
-//   });
-
+  //  const googleLogin = GoogleLogin({
+  //     onSuccess: tokenResponse => {
+  //       console.log(tokenResponse); // chứa access_token
+  //     },
+  //     onError: () => {
+  //       console.log('Login Failed');
+  //     },
+  //   });
 
   const validatePhone = (value) => {
     const regex = /^0\d{9}$/;
@@ -51,12 +50,10 @@ function LoginModalContent({ onClose }) {
     } else {
       setErrorPwd("");
     }
-    // hash pass
-    const hashedpswd = bcrypt.hashSync(pswd, saltRound);
-    console.log("Phone: ", phone, "Password", hashedpswd);
+
     const data = {
-      Phone: phone,
-      Passord: hashedpswd,
+      phone: phone,
+      password: pswd,
     };
 
     //gửi = axios
@@ -64,14 +61,27 @@ function LoginModalContent({ onClose }) {
       .post("http://localhost:8000/api/login", data)
       .then((res) => {
         console.log("Server trả về:", res.data);
+        // lưu token đúng key
+        if (res.data?.access_token) {
+          localStorage.setItem("userToken", res.data.access_token);
+          localStorage.setItem("isLoggedIn", "true");
+        }
+        // chuyển hướng về trang chủ
+        if (res.data.role === "admin") {
+          window.location.href = "/admin-dashboard";
+        } else {
+          window.location.href = "/";
+        }
+        onClose(); // đóng modal
       })
       .catch((err) => {
-        console.error("Lỗi:", err);
+        if (err.response?.status === 401) {
+          setServerError("Sai số điện thoại hoặc mật khẩu");
+        } else {
+          setServerError("Có lỗi xảy ra, vui lòng thử lại");
+        }
       });
-
-    onClose(); // đóng modal
   };
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
@@ -82,8 +92,9 @@ function LoginModalContent({ onClose }) {
         <h2 className="text-center text-lg font-semibold mb-4">
           Đăng nhập WellMarket
         </h2>
-        <button className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2"
-               // onClick={()=>googleLogin()}
+        <button
+          className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2"
+          // onClick={()=>googleLogin()}
         >
           <img
             src="https://www.svgrepo.com/show/355037/google.svg"
@@ -129,7 +140,9 @@ function LoginModalContent({ onClose }) {
         >
           Tiếp tục
         </button>
-
+        {serverError && (
+          <p className="text-red-500 text-sm text-center mt-2">{serverError}</p>
+        )}
         <div className="flex items-center my-3">
           <hr className="flex-grow border-gray-300" />
           <span className="px-2 text-sm text-gray-500">

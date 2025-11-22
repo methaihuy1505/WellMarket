@@ -1,12 +1,27 @@
-import { LoginModal } from "../Login/Login";
-import UserMenu from "./Header_userDropDown";
+import { LoginModal } from "../Login/LoginModal";
+import UserMenu from "./UserMenu";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 export default function Header() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const loginFlag = localStorage.getItem("isLoggedIn");
+    setIsLoggedIn(loginFlag === "true");
+  }, []);
+
   return (
     <header className="flex items-center justify-between px-6 py-2 bg-white shadow-sm">
       {/* LEFT */}
       <div className="flex items-center space-x-4 shrink-0">
         {/* Logo */}
-        <p className="text-2xl font-medium font-italic">WellMarket</p>
+        <span
+          onClick={() => navigate("/")}
+          className="text-2xl font-medium font-italic cursor-pointer"
+        >
+          WellMarket
+        </span>
 
         {/* Location */}
         <div className="flex items-center space-x-1 bg-gray-100 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200">
@@ -24,16 +39,9 @@ export default function Header() {
           <input
             type="text"
             placeholder="Tìm sản phẩm..."
-            className="bg-transparent w-full text-md outline-none px-2  
-                                    
-                        
-                        "
+            className="bg-transparent w-full text-md outline-none px-2 "
           />
-          <button
-            className="p-2  rounded-full flex items-center justify-center w-10 h-10 hover:bg-gray-300
-                                        hover:ring-2 hover:ring-pink-300 hover:shadow-lg hover:shadow-pink-200 rounded-full
-                    "
-          >
+          <button className="p-2 rounded-full flex items-center justify-center w-10 h-10 hover:bg-gray-300 hover:ring-2  hover:ring-pink-300 hover:shadow-lghover:shadow-pink-200 ">
             <img src="./src\assets\search.png" alt="" className="w-6 h-5" />
           </button>
         </div>
@@ -64,20 +72,23 @@ export default function Header() {
           />
         </button>
 
-        <button
-          onClick={() => LoginModal.show()}
-          className="text-md border px-3 py-1 rounded-full hover:bg-gray-100 text-gray-700"
-        >
-          Đăng nhập
-        </button>
+        {!isLoggedIn && (
+          <button
+            onClick={() => LoginModal.show()}
+            className="text-md border px-3 py-1 rounded-full hover:bg-gray-100 text-gray-700"
+          >
+            Đăng nhập
+          </button>
+        )}
 
         <button
-          onClick={() => alert("Đăng tin")}
+          onClick={() => navigate("/up-post")}
           className="text-md bg-pink-400 text-black px-4 py-1 rounded-full font-medium hover:bg-pink-500"
         >
           Đăng tin
         </button>
-        <UserMenu />
+
+        {isLoggedIn && <UserMenu />}
       </div>
     </header>
   );

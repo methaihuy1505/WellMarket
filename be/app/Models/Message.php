@@ -4,6 +4,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\InteractionType;
+use App\Enums\MessageStatus;
 
 class Message extends Model
 {
@@ -50,17 +52,17 @@ class Message extends Model
 
     public function favorites()
     {
-        return $this->interactions()->where('interaction', InteractionType::FAVORITE);
+        return $this->interactions()->where('interaction_type', InteractionType::FAVORITE);
     }
 
     public function reports()
     {
-        return $this->interactions()->where('interaction', InteractionType::REPORT);
+        return $this->interactions()->where('interaction_type', InteractionType::REPORT);
 
     }
 
     public function feedbacks()
     {
-        return $this->interactions()->where('interaction', InteractionType::FEEDBACK);
+        return $this->interactions()->where('interaction_type', InteractionType::FEEDBACK);
     }
 }

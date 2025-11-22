@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Enums\InteractionType;
+use App\Enums\TargetType;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -102,40 +105,47 @@ class User extends Authenticatable implements JWTSubject
     public function favoritePosts()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::FAVORITE)
+            ->where('interaction_type', InteractionType::FAVORITE)
             ->where('target_type', TargetType::POST);
     }
 
     public function favoriteUsers()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::FAVORITE)
+            ->where('interaction_type', InteractionType::FAVORITE)
+            ->where('target_type', TargetType::USER);
+    }
+    public function favoritedBy()
+    {
+        return $this->hasMany(Interaction::class, 'target_id')
+            ->where('interaction_type', InteractionType::FAVORITE)
             ->where('target_type', TargetType::USER);
     }
 
     public function reportedPosts()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::REPORT)
+            ->where('interaction_type', InteractionType::REPORT)
             ->where('target_type', TargetType::POST);
     }
 
     public function reportedUsers()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::REPORT)
+            ->where('interaction_type', InteractionType::REPORT)
             ->where('target_type', TargetType::USER);
     }
+
     public function reportedMessages()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::REPORT)
+            ->where('interaction_type', InteractionType::REPORT)
             ->where('target_type', TargetType::MESSAGE);
     }
 
     public function feedbacks()
     {
         return $this->interactions()
-            ->where('interaction', InteractionType::FEEDBACK);
+            ->where('interaction_type', InteractionType::FEEDBACK);
     }
 }

@@ -38,12 +38,11 @@ export default function VideoUpload({ videos, setVideos }) {
 
       {error && <div className="text-red-500 text-sm">{error}</div>}
 
-      <div className="grid grid-cols-4 gap-3">
-
+      <div className="grid grid-cols-2 gap-3">
         {/* Add video button */}
         {videos.length < 2 && (
           <div
-            className="border-2 border-dashed border-orange-400 w-28 h-28 rounded flex justify-center items-center cursor-pointer"
+            className="border-2 border-dashed border-orange-400 w-28 h-28 rounded flex justify-center items-center cursor-pointer bg-white"
             onClick={() => fileInputRef.current.click()}
           >
             <span className="text-orange-500 text-3xl font-bold">+</span>
@@ -60,9 +59,7 @@ export default function VideoUpload({ videos, setVideos }) {
 
             <button
               className="absolute -top-2 -right-2 bg-black text-white w-6 h-6 rounded-full flex justify-center items-center"
-              onClick={() =>
-                setVideos(videos.filter((_, i) => i !== index))
-              }
+              onClick={() => setVideos(videos.filter((_, i) => i !== index))}
             >
               ✕
             </button>

@@ -19,7 +19,7 @@ services:
       - "5173:5173"
     volumes:
       - ./fe:/app
-      - /app/node_modules
+      - /app/node_modules:/app/node_modules
     networks:
       - appnet
 

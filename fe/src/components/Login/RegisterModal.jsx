@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { LoginModal } from "./Login";
-import bcrypt from "bcryptjs";
+import { LoginModal } from "./LoginModal";
 import axios from "axios";
 
 function checkPasswordConditions(password) {
@@ -85,16 +84,16 @@ function RegisterModalContent({ onClose }) {
 
     // Nếu tất cả hợp lệ
 
-    const hashedpswd = bcrypt.hashSync(pswd, 5);
-    console.log("Thông tin đăng ký:", phone, name, hashedpswd);
+    console.log("Thông tin đăng ký:", phone, name, pswd);
     const data = {
-      Phone: phone,
-      Name: name,
-      Passord: hashedpswd,
+      phone: phone,
+      name: name,
+      password: pswd,
+      password_confirmation: confirmPswd,
     };
     console.log(data);
     axios
-      .post("http://localhost:8000/login", data)
+      .post("http://localhost:8000/api/register", data)
       .then((res) => {
         console.log("Server trả về:", res.data);
       })

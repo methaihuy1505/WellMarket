@@ -19,7 +19,7 @@ class Interaction extends Model
         'meta',
         'target_type',
         'status',
-        'interaction',
+        'interaction_type',
     ];
 
     protected $casts = [
@@ -28,7 +28,7 @@ class Interaction extends Model
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
         'status'      => ReportStatus::class,
-        'interaction' => InteractionType::class,
+        'interaction_type' => InteractionType::class,
         'target_type' => TargetType::class,
     ];
 
