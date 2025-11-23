@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import AccountManager from "../components/Admin/AccountManager";
 import EventManager from "../components/Admin/EventManager";
+import PostsManager from "../components/Admin/PostManager";
 
 export default function AdminDasboard() {
   const DEFAULT_AVATAR = "/mnt/data/c2f2bffd-755f-40cd-adf8-c4980e31d491.png";
@@ -71,62 +72,7 @@ export default function AdminDasboard() {
         return <EventManager />;
 
       case "baidang":
-        return (
-          <div>
-            <h2 className="text-lg font-semibold mb-6">Bài đăng</h2>
-            <div className="flex justify-between items-center mb-4">
-              <div className="text-sm text-gray-600">
-                Quản lý bài đăng của bạn
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleCreatePost}
-                  className="px-3 py-2 bg-blue-600 text-white rounded"
-                >
-                  Tạo bài đăng mới
-                </button>
-                <button
-                  onClick={() => alert("Demo: lọc")}
-                  className="px-3 py-2 border rounded"
-                >
-                  Lọc
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white rounded shadow p-4">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="text-sm text-gray-600 border-b">
-                    <th className="py-2">#</th>
-                    <th className="py-2">Tiêu đề</th>
-                    <th className="py-2">Giá</th>
-                    <th className="py-2">Trạng thái</th>
-                    <th className="py-2">Hành động</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {posts.map((p) => (
-                    <tr key={p.id} className="border-b">
-                      <td className="py-2">{p.id}</td>
-                      <td className="py-2">{p.title}</td>
-                      <td className="py-2">{p.price}</td>
-                      <td className="py-2">{p.status}</td>
-                      <td className="py-2">
-                        <button className="px-3 py-1 mr-2 border rounded text-sm">
-                          Sửa
-                        </button>
-                        <button className="px-3 py-1 border rounded text-sm">
-                          Xóa
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
+        return <PostsManager />;
 
       case "thongke":
         return (
@@ -159,10 +105,8 @@ export default function AdminDasboard() {
       {/* Top bar */}
       <header className="bg-black text-white px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white">
-            🎓
-          </div>
-          <div className="font-semibold">Sinh Viên</div>
+          <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white"></div>
+          <div className="font-semibold">ADMIN WELLMARKET</div>
         </div>
         <div className="flex items-center gap-4">
           <div className="hidden md:block">{"profile.fullName"}</div>
@@ -179,10 +123,10 @@ export default function AdminDasboard() {
             <div className="bg-white rounded shadow p-4">
               <h3 className="font-semibold mb-3">Thanh Menu</h3>
               <ul className="space-y-2">
-                <MenuItem id="taikhoan" label="Tài khoản" icon="👤" />
-                <MenuItem id="sukien" label="Sự kiện" icon="📅" />
-                <MenuItem id="baidang" label="Bài đăng" icon="📝" />
-                <MenuItem id="thongke" label="Thống kê" icon="📊" />
+                <MenuItem id="taikhoan" label="Tài khoản" icon="" />
+                <MenuItem id="sukien" label="Sự kiện" icon="" />
+                <MenuItem id="baidang" label="Bài đăng" icon="" />
+                <MenuItem id="thongke" label="Thống kê" icon="" />
               </ul>
             </div>
           </aside>

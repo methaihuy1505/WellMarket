@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named import createRoot
 import { RegisterModal } from "./RegisterModal";
 import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
+// import { GoogleLogin } from "@react-oauth/google";
 
 function LoginModalContent({ onClose }) {
   const [phone, setPhone] = useState("");
