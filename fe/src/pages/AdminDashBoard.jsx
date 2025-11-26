@@ -3,7 +3,7 @@ import AccountManager from "../components/Admin/AccountManager";
 import EventManager from "../components/Admin/EventManager";
 import PostsManager from "../components/Admin/PostManager";
 
-export default function AdminDasboard() {
+export default function AdminDashBoard() {
   const DEFAULT_AVATAR = "/mnt/data/c2f2bffd-755f-40cd-adf8-c4980e31d491.png";
   const AVATAR_SAMPLE = "/mnt/data/31b48e4b-3c90-458e-a48b-eda3567ca8f1.png";
 

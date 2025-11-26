@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import UpPostPage from "./pages/UpPostPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import ProfilePage from "./pages/ProfilePage";
-import AdminDashboard from "./pages/AdminDashBoard";
+import AdminDashBoard from "./pages/AdminDashBoard";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/up-post" element={<UpPostPage />}></Route>
         <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashBoard />} />
       </Routes>
     </Router>
   );
