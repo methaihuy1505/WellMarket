@@ -1,5 +1,5 @@
 import { LoginModal } from "./Login";
-import { RegisterModal } from "./Register";
+import { RegisterModal } from "../Register/RegisterModal";
 import Footer from "../Layout/Footer";
 import Header from "../Layout/Header"
 import ProductGrid from "../Layout/ProductUI";

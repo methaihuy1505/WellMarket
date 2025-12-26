@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named import createRoot
-import { RegisterModal } from "./Register";
+import { RegisterModal } from "../Register/RegisterModal";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import { GoogleLogin } from '@react-oauth/google';

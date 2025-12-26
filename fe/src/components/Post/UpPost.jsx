@@ -139,9 +139,9 @@ export default function CreatePostForm() {
                                 value={form.description}
                                 onChange={(e) => handleChange("description", e.target.value)}
                                 placeholder="- Tình trạng sản phẩm
-- Thời gian sử dụng
-- Phụ kiện kèm theo
-- Lý do bán..."
+                                - Thời gian sử dụng
+                                - Phụ kiện kèm theo
+                                - Lý do bán..."
                                 className="mt-1 w-full border rounded px-3 py-2"
                             />
                         </div>
