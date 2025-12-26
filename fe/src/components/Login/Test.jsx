@@ -1,17 +1,17 @@
 import { LoginModal } from "./Login";
 import { RegisterModal } from "../Register/RegisterModal";
 import Footer from "../Layout/Footer";
-import Header from "../Layout/Header"
+import Header from "../Layout/Header";
 import ProductGrid from "../Layout/ProductUI";
 import { products } from "../Layout/FakeData";
 import CreatePostForm from "../Post/UpPost";
+import AdminDasboard from "../../pages/AdminDasboard";
 export default function Test() {
   return (
     <>
- 
-    <Header />
-     <CreatePostForm/>
-    {/* <ProductGrid apiData={products} />
+      {/* <Header /> */}
+      {/* <CreatePostForm /> */}
+      {/* <ProductGrid apiData={products} />
 
     <button
       onClick={() => LoginModal.show()}
@@ -25,7 +25,8 @@ export default function Test() {
     >
       Mở popup đăng ký
     </button> */}
-      <Footer />
+      {/* <Footer /> */}
+      <AdminDasboard />
     </>
   );
 }

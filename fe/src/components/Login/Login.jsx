@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named 
 import { RegisterModal } from "../Register/RegisterModal";
 import bcrypt from "bcryptjs";
 import axios from "axios";
-import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from '@react-oauth/google';
 
 function LoginModalContent({ onClose }) {
   const [phone, setPhone] = useState("");
@@ -18,15 +18,14 @@ function LoginModalContent({ onClose }) {
     }, 200);
   };
 
-//  const googleLogin = GoogleLogin({
-//     onSuccess: tokenResponse => {
-//       console.log(tokenResponse); // chứa access_token
-//     },
-//     onError: () => {
-//       console.log('Login Failed');
-//     },
-//   });
-
+  //  const googleLogin = GoogleLogin({
+  //     onSuccess: tokenResponse => {
+  //       console.log(tokenResponse); // chứa access_token
+  //     },
+  //     onError: () => {
+  //       console.log('Login Failed');
+  //     },
+  //   });
 
   const validatePhone = (value) => {
     const regex = /^0\d{9}$/;
@@ -61,7 +60,7 @@ function LoginModalContent({ onClose }) {
 
     //gửi = axios
     axios
-      .post("http://localhost:8000/login", data)
+      .post("http://localhost:8000/api/login", data)
       .then((res) => {
         console.log("Server trả về:", res.data);
       })
@@ -72,7 +71,6 @@ function LoginModalContent({ onClose }) {
     onClose(); // đóng modal
   };
 
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
       <div
@@ -82,8 +80,9 @@ function LoginModalContent({ onClose }) {
         <h2 className="text-center text-lg font-semibold mb-4">
           Đăng nhập WellMarket
         </h2>
-        <button className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2"
-               // onClick={()=>googleLogin()}
+        <button
+          className="w-full text-gray-600 flex items-center justify-center border rounded-full py-2 hover:text-black hover:bg-pink-200 mb-2"
+          // onClick={()=>googleLogin()}
         >
           <img
             src="https://www.svgrepo.com/show/355037/google.svg"
