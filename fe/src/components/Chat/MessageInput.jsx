@@ -127,14 +127,26 @@ export default function MessageInput({ conversationId }) {
           <button
             onClick={sendMessage}
             className="
-              absolute right-2 top-1/2 -translate-y-1/2
-              w-9 h-9 rounded-full
-              bg-pink-100 hover:bg-pink-400
-              flex items-center justify-center
-              text-white
-            "
+    absolute right-2 top-1/2 -translate-y-1/2
+    w-9 h-9 rounded-full
+    bg-pink-100 hover:bg-pink-400
+    flex items-center justify-center
+    text-white
+
+    transform
+    transition-all duration-200 ease-out
+    hover:scale-[1.2]
+    active:scale-95
+  "
           >
-            <img src="./src\assets\search.png" alt="" className="w-6 h-5" />
+            <img
+              src="./src/assets/send.png"
+              alt=""
+              className="
+      w-6 h-5
+      transition-transform duration-200
+    "
+            />
           </button>
         </div>
 
