@@ -5,7 +5,8 @@ import UpPostPage from "./pages/UpPostPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashBoard";
-import ChatPage from "./components/Chat/ChatPage";
+import ChatPage from "./pages/ChatPage";
+import PostDetail from "./components/PostDetail/PostDetail";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/chat" element={<ChatPage />} />
-
+        <Route path="/postdetail" element={<PostDetail />} />
       </Routes>
     </Router>
   );

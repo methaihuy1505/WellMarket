@@ -1,7 +1,7 @@
 // src/pages/ChatPage.jsx
-import ChatList from "./ChatList";
-import ChatWindow from "./ChatWindow";
-import Header from "../Layout/Header";
+import ChatList from "../components/Chat/ChatList";
+import ChatWindow from "../components/Chat/ChatWindow";
+import Header from "../components/Layout/Header";
 import { useState } from "react";
 
 export default function ChatPage() {
