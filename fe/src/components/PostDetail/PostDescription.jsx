@@ -10,7 +10,7 @@ export default function PostDescription({ post }) {
         postDescriptionMock.description;
 
     return (
-        <div className="bg-white rounded-lg p-4">
+        <div className="bg-white border-2 border-pink-100 rounded-lg p-4">
             <h2 className="font-semibold mb-2">Mô tả chi tiết</h2>
 
             {/* TEXT WRAPPER – KHÔNG overflow */}
@@ -38,7 +38,7 @@ export default function PostDescription({ post }) {
             <div className="text-center mt-1">
                 <button
                     onClick={() => setExpanded(!expanded)}
-                    className="text-sm text-gray-500 hover:underline"
+                    className="text-sm text-gray-500 hover:underline hover:text-pink-500"
                 >
                     {expanded ? "Thu gọn ▲" : "Xem thêm ▼"}
                 </button>

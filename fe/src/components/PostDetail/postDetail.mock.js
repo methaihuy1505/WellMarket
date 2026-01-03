@@ -1,6 +1,6 @@
 // src/pages/postDetail.mock.js
 export const postDetailMock = {
-   title: "",
+   title: "AHIHIHIHIHI",
   price: 450000,
   item_condition: "Đã sử dụng",
   category_name: "Tranh ảnh, khung tranh",

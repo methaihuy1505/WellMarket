@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../../utils/axios";
 import { commentsMock } from "./Comment.mock";
 import CommentModal from "./CommentModal";
+import sendIcon from "../../assets/send.png";
 
 export default function CommentBox({ userId, postId }) {
   const [comments, setComments] = useState([]);
@@ -62,7 +63,7 @@ export default function CommentBox({ userId, postId }) {
 
   return (
     <>
-      <div className="bg-white p-4 rounded-xl border space-y-4">
+      <div className="bg-white p-4 rounded-xl border-2 border-pink-100 rounded-lg space-y-4">
         <h3 className="font-semibold">Bình luận</h3>
 
         {/* LIST */}
@@ -76,7 +77,7 @@ export default function CommentBox({ userId, postId }) {
         {/* XEM TẤT CẢ */}
         {comments.length > 3 && (
           <button
-            className="text-sm underline"
+            className="text-sm hover:text-pink-500 hover:underline"
             onClick={() => setOpen(true)}
           >
             Xem tất cả {comments.length} bình luận
@@ -99,10 +100,23 @@ export default function CommentBox({ userId, postId }) {
           <button
             onClick={submitComment}
             disabled={sending}
-            className="text-gray-400 hover:text-green-600 disabled:opacity-50"
+            className="
+    p-2 rounded-full
+    transition-all duration-200 ease-out
+    text-pink-400
+    hover:text-pink-600 hover:bg-pink-300
+    hover:scale-110
+    active:scale-95
+    disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-transparent
+  "
           >
-            ✈️
+            <img
+              src={sendIcon}
+              className="h-5 w-5 transition-transform duration-200 group-hover:-translate-y-0.5"
+              alt="send"
+            />
           </button>
+
         </div>
       </div>
 

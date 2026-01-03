@@ -47,13 +47,13 @@ export default function SimilarPosts({ categoryId, currentPostId }) {
     if (!posts || posts.length === 0) return null;
 
     return (
-        <div>
+        <div className="bg-white p-6 border-2 border-pink-100 rounded-lg ">
             <h2 className="font-semibold mb-3">Tin đăng tương tự</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
                 {posts.map((item, idx) => (
                     <div
                         key={item.id || idx}
-                        className="bg-white rounded-lg shadow-sm border hover:shadow-md cursor-pointer duration-200"
+                        className="bg-white rounded-lg shadow-sm border hover:shadow-lg cursor-pointer duration-200"
                     >
                         {/* Image */}
                         <div className="relative z-0">
@@ -88,9 +88,6 @@ export default function SimilarPosts({ categoryId, currentPostId }) {
                             <p className="text-gray-600 text-sm mt-1 line-clamp-1">{item.desc || ""}</p>
                             <p className="text-pink-600 font-bold text-[17px] mt-1">{item.price || 0} đ</p>
                             <p className="text-gray-500 text-xs mt-1 flex gap-1 items-center">{item.location || ""}</p>
-                            <div className="flex justify-end mt-2">
-                                <button className="text-gray-600 text-xl">⋮</button>
-                            </div>
                         </div>
                     </div>
                 ))}

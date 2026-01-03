@@ -2,7 +2,7 @@ export default function PostDetailInfo({ post }) {
   if (!post) return null;
 
   return (
-    <div className="bg-white rounded-lg p-4 space-y-4">
+    <div className="bg-white border-2 border-pink-100 rounded-lg p-4 space-y-4">
       <h2 className="font-semibold">Thông tin chi tiết</h2>
 
       <div className="text-sm divide-y">

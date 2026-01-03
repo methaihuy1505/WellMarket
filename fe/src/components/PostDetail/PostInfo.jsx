@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import ReportModal from "./PostReportModal";
 
 export default function PostInfo({ post, userId }) {
   const [openReport, setOpenReport] = useState(false);
+const navigate = useNavigate();
 
   if (!post) return null;
 
@@ -20,14 +23,14 @@ export default function PostInfo({ post, userId }) {
           onClick={handleShare}
           className="text-sm px-3 py-1 border rounded hover:bg-gray-100"
         >
-          🔗 Chia sẻ
+          Chia sẻ
         </button>
 
         <button
           onClick={() => setOpenReport(true)}
           className="text-sm px-3 py-1 border border-red-400 text-red-500 rounded hover:bg-red-50"
         >
-          🚩 Báo cáo
+          Báo cáo
         </button>
       </div>
 
@@ -42,7 +45,7 @@ export default function PostInfo({ post, userId }) {
       </div>
 
       {/* PRICE */}
-      <div className="text-red-500 text-2xl font-bold">
+      <div className="text-red-500 text-2xl font-bold ">
         {typeof post.price === "number"
           ? post.price.toLocaleString() + " đ"
           : "Liên hệ"}
@@ -61,11 +64,11 @@ export default function PostInfo({ post, userId }) {
 
       {/* ACTIONS */}
       <div className="flex gap-3">
-        <button className="flex-1 bg-gray-100 py-2 rounded text-sm font-medium">
+        <button className="flex-1 bg-gray-100 py-2 rounded text-sm font-medium hover:bg-gray-200">
           {post.phone ?? "Hiện số"}
         </button>
 
-        <button className="flex-1 bg-yellow-400 py-2 rounded font-semibold">
+        <button className="flex-1 bg-pink-400 py-2 rounded font-semibold hover:bg-pink-200">
           Chat
         </button>
       </div>
@@ -88,9 +91,32 @@ export default function PostInfo({ post, userId }) {
           </div>
         </div>
 
-        <div className="text-xs text-gray-500 text-right">
-          <div>{post.sold_count ?? 0} đã bán</div>
-          <div>⭐ {post.review_count ?? 0} đánh giá</div>
+        <div className=" flex text-xs text-gray-500 text-right space-x-1">
+          <div className="text-right text-xs text-gray-500 space-y-0.5">
+            <button
+              onClick={() => navigate(`/user/${post.user_id}/sold`)}
+              className="
+      block w-full text-right
+      hover:underline
+      hover:font-semibold
+      transition
+    "
+            >
+              {post.sold_count ?? 0} đã bán
+            </button>
+
+            <button
+              onClick={() => navigate(`/user/${post.user_id}/reviews`)}
+              className="
+      block w-full text-right
+      hover:underline
+      hover:font-semibold
+      transition
+    "
+            >
+              {post.review_count ?? 0} đánh giá
+            </button>
+          </div>
         </div>
       </div>
 

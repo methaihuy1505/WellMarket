@@ -16,7 +16,7 @@ export default function PostReview({ postId }) {
   };
 
   return (
-    <div className="bg-white rounded-lg p-4">
+    <div className="bg-white border-2 border-pink-100 rounded-lg p-4">
       <h2 className="font-semibold mb-2">Đánh giá sản phẩm</h2>
 
       <div className="flex gap-1 mb-2">

@@ -33,12 +33,20 @@ export default function PostGallery({ images = [] }) {
         </div>
 
         {/* MAIN IMAGE */}
-        <div className="relative group flex-1">
-          <img
-            src={images[index]}
-            onClick={() => setPreview(true)}
-            className="w-full h-[420px] object-cover rounded-lg cursor-zoom-in"
-          />
+        <div className="relative overflow-hidden rounded-lg flex-1 h-[420px] group">
+          <div
+            className="flex h-full transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {images.map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                onClick={() => setPreview(true)}
+                className="w-full h-full object-cover flex-shrink-0 cursor-zoom-in"
+              />
+            ))}
+          </div>
 
           {images.length > 1 && (
             <>
