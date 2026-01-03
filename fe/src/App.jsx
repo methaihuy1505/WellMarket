@@ -7,6 +7,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashBoard";
 import ChatPage from "./pages/ChatPage";
 import PostDetail from "./components/PostDetail/PostDetail";
+import PostManager from "./components/PostManager/PostManager";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/postdetail" element={<PostDetail />} />
+        <Route path="/postmanager" element={<PostManager />} />
+
       </Routes>
     </Router>
   );
