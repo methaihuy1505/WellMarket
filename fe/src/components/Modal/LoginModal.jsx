@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client"; // <<< quan trọng: dùng named import createRoot
 import { RegisterModal } from "./RegisterModal";
-import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
-
+import api from "../../utils/api";
 function LoginModalContent({ onClose }) {
   const [phone, setPhone] = useState("");
   const [error, setPhoneError] = useState("");
@@ -37,7 +36,6 @@ function LoginModalContent({ onClose }) {
 
   const handleSubmit = () => {
     const err = validatePhone(phone);
-    const saltRound = 5;
     if (err) {
       setPhoneError(err);
       return;
@@ -57,21 +55,17 @@ function LoginModalContent({ onClose }) {
     };
 
     //gửi = axios
-    axios
-      .post("http://localhost:8000/api/login", data)
+    api
+      .post("/login", data)
       .then((res) => {
-        console.log("Server trả về:", res.data);
-        // lưu token đúng key
-        if (res.data?.access_token) {
+        if (res.data.role === "admin") {
+          localStorage.setItem("adminToken", res.data.access_token);
+        } else {
           localStorage.setItem("userToken", res.data.access_token);
-          localStorage.setItem("isLoggedIn", "true");
         }
         // chuyển hướng về trang chủ
-        if (res.data.role === "admin") {
-          window.location.href = "/admin-dashboard";
-        } else {
-          window.location.href = "/";
-        }
+        window.location.href = "/";
+
         onClose(); // đóng modal
       })
       .catch((err) => {

@@ -2,17 +2,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
-use Illuminate\Database\Eloquent\Relations\hasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
 
     protected $fillable = [
-        'name',
-        'brand',
         'category_id',
-        'attributes',
+        'brand_id',
+        'model_id',
     ];
 
     protected $casts = [
@@ -20,17 +19,26 @@ class Product extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function category(): belongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-    public function productImages(): hasMany
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+    public function model(): BelongsTo
+    {
+        return $this->belongsTo(ProductModel::class);
+    }
+    public function productImages(): HasMany
     {
         return $this->hasMany(ProductImage::class);
     }
-    public function posts(): hasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
+
 
 }

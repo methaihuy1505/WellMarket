@@ -9,15 +9,14 @@ class BoostPackage extends Model
 {
     protected $fillable = [
         'name',
+        'description',
         'category_id',
         'price',
-        'duration_days',
         'priority',
     ];
 
     protected $casts = [
         'price'         => 'decimal:2',
-        'duration_days' => 'integer',
         'priority'      => 'integer',
         'created_at'    => 'datetime',
         'updated_at'    => 'datetime',

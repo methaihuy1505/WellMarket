@@ -27,12 +27,13 @@ class Event extends Model
         'start_date'    => 'datetime',
         'end_date'      => 'datetime',
         'created_at'    => 'datetime',
+        'updated_at'    => 'datetime',
         'event_type'    => EventType::class,
         'status'        => EventStatus::class,
     ];
     public function minigameType(): BelongsTo
     {
-        return $this->belongsTo(MinigameType::class);
+        return $this->belongsTo(MiniGameType::class);
     }
 
     public function participants(): belongsToMany

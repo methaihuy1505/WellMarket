@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { use, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [pswd, setPassword] = useState("");
@@ -14,7 +14,6 @@ export default function AdminLoginPage() {
     if (!regex.test(value)) return "Email không hợp lệ";
     return "";
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -34,22 +33,18 @@ export default function AdminLoginPage() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8000/api/login", {
+      const res = await api.post("/login", {
         email: email,
         password: pswd,
       });
       console.log("Server trả về:", res.data);
-        // lưu token đúng key
-        if (res.data?.access_token) {
-          localStorage.setItem("adminToken", res.data.access_token);
-        }
-        // chuyển hướng về trang chủ
-        if (res.data.role === "admin") {
-          window.location.href = "/admin-dashboard";
-        } else {
-          window.location.href = "/";
-        }
-      navigate("/admin-dashboard");
+      // chuyển hướng về trang chủ
+      if (res.data.role === "admin") {
+        localStorage.setItem("adminToken", res.data.access_token);
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/admin-login");
+      }
     } catch (err) {
       setServerMsg(
         "Đăng nhập thất bại: " + err.response?.data?.message || err.message

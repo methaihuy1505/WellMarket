@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Models\User;
+use App\Enums\UserRole;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -17,7 +18,6 @@ class AuthController extends Controller
         } else {
             $credentials = $request->only('phone', 'password');
         }
-
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Unauthorized'], 401);
@@ -39,29 +39,28 @@ class AuthController extends Controller
     // API Register
     public function register(Request $request)
     {
+        try {
+            // Validate dữ liệu đầu vào
+            $validated = $request->validate([
+                'name'     => 'required|string|max:255',
+                'phone'    => 'required|string|max:20|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
 
-        // Validate dữ liệu đầu vào
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'phone'    => 'required|string|max:20|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+            // Tạo user mới
+            $user = User::create([
+                'name'     => $validated['name'],
+                'phone'    => $validated['phone'],
+                'password' => bcrypt($validated['password']),
+                'role'     => UserRole::USER,
+            ]);
 
-        // Tạo user mới
-        $user = User::create([
-            'name'     => $validated['name'],
-            'phone'    => $validated['phone'],
-            'password' => bcrypt($validated['password']),
-        ]);
-
-        // Tạo token cho user mới
-        $token = JWTAuth::fromUser($user);
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => auth('api')->factory()->getTTL() * 60,
-        ]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // Nếu có lỗi
+            return response()->json(['success' => false], 400);
+        }
     }
 
 }
+   

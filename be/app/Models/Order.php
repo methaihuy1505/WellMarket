@@ -12,10 +12,10 @@ class Order extends Model
         'note',
         'status',
     ];
-
     protected $casts = [
         'completed_at' => 'datetime',
         'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
         'status'       => OrderStatus::class,
     ];
 

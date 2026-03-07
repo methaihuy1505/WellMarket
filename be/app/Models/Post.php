@@ -7,7 +7,10 @@ use App\Enums\PostStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 
 class Post extends Model
 {
@@ -21,11 +24,9 @@ class Post extends Model
         'price',
         'item_condition',
         'location',
-        'contact_phone',
-        'contact_email',
         'post_status',
         'views_count',
-        'waranty',
+        'warranty',
     ];
 
     protected $casts = [
@@ -62,9 +63,31 @@ class Post extends Model
         return $this->hasMany(Order::class);
     }
 
-    public function postImages(): HasMany
+    public function postMedias(): HasMany
     {
-        return $this->hasMany(PostImage::class);
+        return $this->hasMany(PostMedia::class);
+    }
+    public function postAttributes(): HasMany
+    {
+        return $this->hasMany(PostAttribute::class);
+    }
+
+    // Nếu muốn lấy trực tiếp file ảnh chính (is_primary = 1)
+    public function primaryMedia(): HasOne
+    {
+        return $this->hasOne(PostMedia::class)->where('is_primary', 1);
+    }
+
+    public function primaryFile(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            File::class,
+            PostMedia::class,
+            'post_id', // FK trên post_medias
+            'id',      // PK trên files
+            'id',      // PK trên posts
+            'file_id'  // FK trên post_medias
+        )->where('post_medias.is_primary', 1);
     }
 
     public function interactions()

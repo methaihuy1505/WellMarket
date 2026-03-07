@@ -4,14 +4,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PostImage extends Model
+class PostMedia extends Model
 {
+    protected $table    = 'post_medias';
     protected $fillable = [
         'post_id',
         'position',
         'is_primary',
         'file_id',
     ];
+
 
     protected $casts = [
         'position'   => 'integer',

@@ -6,12 +6,14 @@ use App\Enums\ReportStatus;
 use App\Enums\TargetType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Interaction extends Model
 {
     protected $fillable = [
         'target_id',
         'user_id',
+        'parent_id',
         'rating',
         'comment',
         'reason_id',
@@ -23,13 +25,13 @@ class Interaction extends Model
     ];
 
     protected $casts = [
-        'rating'      => 'integer',
-        'meta'        => 'array',
-        'created_at'  => 'datetime',
-        'updated_at'  => 'datetime',
-        'status'      => ReportStatus::class,
+        'rating'           => 'integer',
+        'meta'             => 'array',
+        'created_at'       => 'datetime',
+        'updated_at'       => 'datetime',
+        'status'           => ReportStatus::class,
         'interaction_type' => InteractionType::class,
-        'target_type' => TargetType::class,
+        'target_type'      => TargetType::class,
     ];
 
     // Quan hệ với User
@@ -43,9 +45,24 @@ class Interaction extends Model
     {
         return $this->belongsTo(ReportReason::class);
     }
-    // Quan hệ đa hình ngược đến mục tiêu tương tác (Message, Post, Comment, v.v.)
+    // Quan hệ đa hình ngược đến mục tiêu tương tác (Message, Post, User, v.v.)
     public function target()
     {
         return $this->morphTo();
     }
+
+    public function replies(): HasMany
+    {
+        return $this->hasMany(Interaction::class, 'parent_id');
+    }
+
+    public function parent(): BeLongsTo
+    {
+        return $this->belongsTo(Interaction::class, 'parent_id');
+    }
+    public function targetUser()
+    {
+        return $this->belongsTo(User::class, 'target_id')->where('target_type', 'user');
+    }
+
 }

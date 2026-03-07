@@ -1,47 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext";
+import { initialUser } from "../../contexts/UserContext";
+
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef();
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    name: "",
-    avatar: null,
-    avatarText: "U",
-    favorites: 0, // số người yêu thích mình
-    favorite_users: 0, // số user mình đã yêu thích
-    coins: 0,
-  });
-
-  // Khi menu mở thì gọi API lấy profile
-  useEffect(() => {
-    if (open) {
-      const token = localStorage.getItem("userToken");
-      if (!token) return;
-
-      axios
-        .get("http://localhost:8000/api/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const data = res.data;
-          setUser({
-            name: data.name,
-            avatar: data.avatar || null,
-            avatarText: data.name?.[0]?.toUpperCase() || "U",
-            favorites: data.favorites || 0,
-            favorite_users: data.favorite_users || 0,
-            coins: data.coins || 0,
-          });
-        })
-        .catch((err) => {
-          console.error("API Error:", err);
-        });
-    }
-  }, [open]); // chỉ gọi khi open = true
+  const { user, setUser } = useUser();
 
   // Click outside -> close
   useEffect(() => {
@@ -68,7 +34,7 @@ export default function UserMenu() {
             className="w-14 h-14 rounded-full object-cover"
           />
         ) : (
-          <div className="bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-semibold">
+          <div className="bg-pink-500 text-white w-14 h-14 rounded-full flex items-center justify-center font-semibold">
             {user.avatarText}
           </div>
         )}
@@ -78,10 +44,9 @@ export default function UserMenu() {
       {/* DROPDOWN */}
       {open && (
         <div
-          className="
-            absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg p-4 
-            z-50 animate-slideDown
-          "
+          // --- ĐÃ SỬA Ở ĐÂY ---
+          // Thêm max-h-[80vh] và overflow-y-auto
+          className="absolute right-0 mt-2 w-80 max-h-[80vh] overflow-y-auto bg-white rounded-xl shadow-lg p-4 z-50 animate-slideDown"
         >
           {/* Profile */}
           <div className="flex flex-col items-center text-center mb-4">
@@ -93,13 +58,16 @@ export default function UserMenu() {
                   className="w-14 h-14 rounded-full object-cover"
                 />
               ) : (
-                <div className="bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-semibold">
+                <div className="bg-pink-500 text-white w-14 h-14 rounded-full flex items-center justify-center font-semibold">
                   {user.avatarText}
                 </div>
               )}
-              <span className="absolute bottom-0 right-0 bg-black text-white text-xs rounded-full px-1">
+              <button
+                onClick={() => navigate("/profile?tab=profile")}
+                className="absolute bottom-0 right-0 bg-black text-white text-xs rounded-full px-1 cursor-pointer"
+              >
                 ✎
-              </span>
+              </button>
             </div>
 
             <p className="mt-2 text-lg font-semibold">{user.name}</p>
@@ -116,7 +84,7 @@ export default function UserMenu() {
           />
           <MenuItem
             label="Người đã yêu thích"
-            onClick={() => navigate("/profile?tab=favorited-users")}
+            onClick={() => navigate("/profile?tab=favorite-users")}
           />
           <MenuItem
             label="Bài đăng yêu thích"
@@ -130,21 +98,27 @@ export default function UserMenu() {
             label="Đánh giá từ tôi"
             onClick={() => navigate("/profile?tab=reviews")}
           />
-          <p className="text-sm text-gray-500">
-            Số dư WellCoin: {user.coins} WC
+          <p className="text-sm text-gray-500 mt-2 px-1">
+            Số dư WellCoin:{" "}
+            <span className="font-bold text-pink-600">{user.coins} WC</span>
           </p>
+
           <SectionTitle text="Khác" />
-          <MenuItem label="Cài đặt tài khoản" onClick={() => navigate("/profile?tab=settings")} />
-          <MenuItem label="Trợ giúp" icon="" />
-          <MenuItem label="Đóng góp ý kiến" icon="" />
+          <MenuItem
+            label="Cài đặt tài khoản"
+            onClick={() => navigate("/profile?tab=settings")}
+          />
+          <MenuItem label="Trợ giúp" />
+          <MenuItem label="Đóng góp ý kiến" />
 
           {/* Logout */}
           <div
-            className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-100 rounded-lg"
+            className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-100 rounded-lg border-t mt-2"
             onClick={() => {
+              setUser(initialUser);
               localStorage.removeItem("userToken");
-              localStorage.setItem("isLoggedIn", "false");
-              window.location.reload(); // reload để Header cập nhật
+              localStorage.removeItem("adminToken");
+              navigate("/");
             }}
           >
             <div className="flex items-center space-x-3 text-red-500">
@@ -159,22 +133,26 @@ export default function UserMenu() {
 
 /* ------------------------- CHILD COMPONENTS --------------------------- */
 function SectionTitle({ text }) {
-  return <p className="text-gray-500 text-sm mt-4 mb-2">{text}</p>;
+  return (
+    <p className="text-gray-500 text-sm mt-4 mb-2 font-semibold uppercase ">
+      {text}
+    </p>
+  );
 }
 
 function MenuItem({ label, icon, noBorder, onClick }) {
   return (
     <div
-      className={`flex justify-between items-center py-3 cursor-pointer hover:bg-gray-100 rounded-lg ${
-        noBorder ? "" : "border-b"
+      className={`flex justify-between items-center py-3 cursor-pointer hover:bg-gray-50 rounded-lg px-2 transition-colors ${
+        noBorder ? "" : "border-b border-gray-100"
       }`}
       onClick={onClick}
     >
       <div className="flex items-center space-x-3">
-        <span className="text-lg">{icon}</span>
-        <span className="text-sm font-medium">{label}</span>
+        {icon && <span className="text-lg">{icon}</span>}
+        <span className="text-sm font-medium text-gray-700">{label}</span>
       </div>
-      <span>›</span>
+      <span className="text-gray-400 text-xs">›</span>
     </div>
   );
 }

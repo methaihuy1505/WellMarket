@@ -1,20 +1,20 @@
 <?php
 namespace App\Models;
 
+use App\Enums\InteractionType;
+use App\Enums\MessageStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Enums\InteractionType;
-use App\Enums\MessageStatus;
 
 class Message extends Model
 {
     protected $fillable = [
+        'conversation_id',
         'sender_id',
         'receiver_id',
         'content',
         'is_read',
-        'transaction_count',
         'status',
     ];
 
@@ -22,6 +22,7 @@ class Message extends Model
         'is_read'           => 'boolean',
         'transaction_count' => 'integer',
         'created_at'        => 'datetime',
+        'updated_at'        => 'datetime',
         'status'            => MessageStatus::class,
     ];
 
@@ -35,7 +36,7 @@ class Message extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 
-    public function messageAttachments(): HasMany
+    public function attachments(): HasMany
     {
         return $this->hasMany(MessageAttachment::class);
     }
@@ -65,4 +66,9 @@ class Message extends Model
     {
         return $this->interactions()->where('interaction_type', InteractionType::FEEDBACK);
     }
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class);
+    }
+
 }

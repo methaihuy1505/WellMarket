@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,6 +11,7 @@ class Payment extends Model
 {
     protected $fillable = [
         'user_id',
+        'post_id',
         'amount',
         'transaction_id',
         'payment_proof_url',
@@ -30,6 +33,11 @@ class Payment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function post(): BelongsTo
+    {
+        return $this->belongsTo(Post::class);
     }
 
     public function postBoosts(): HasMany

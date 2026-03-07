@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { LoginModal } from "./LoginModal";
-import axios from "axios";
-
+import api from "../../utils/api";
 function checkPasswordConditions(password) {
   return {
     length: password.length >= 8 && password.length <= 30,
@@ -86,19 +85,23 @@ function RegisterModalContent({ onClose }) {
 
     console.log("Thông tin đăng ký:", phone, name, pswd);
     const data = {
-      phone: phone,
       name: name,
+      phone: phone,
       password: pswd,
       password_confirmation: confirmPswd,
     };
     console.log(data);
-    axios
-      .post("http://localhost:8000/api/register", data)
+    api
+      .post("/register", data)
       .then((res) => {
         console.log("Server trả về:", res.data);
       })
       .catch((err) => {
-        console.error("Lỗi:", err);
+        if (err.response) {
+          console.log("Validation errors:", err.response.data.errors);
+        } else {
+          console.log("Unexpected error:", err.message);
+        }
       });
 
     alert("Đăng ký thành công!");

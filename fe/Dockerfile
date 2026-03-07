@@ -9,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-# Chỉ tạo file cấu hình nếu chưa tồn tại
-RUN [ ! -f tailwind.config.js ] && npx tailwindcss init -p || echo "Tailwind config already exists"
+# Tạo file tailwind.config.js nếu chưa có
+RUN test -f tailwind.config.js || npx tailwindcss init -p
 
 EXPOSE 5173
 

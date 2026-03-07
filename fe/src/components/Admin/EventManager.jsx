@@ -1,6 +1,6 @@
 // src/components/Admin/EventManager.jsx
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import api from "../../utils/api";
 
 /**
  * EventManager.jsx
@@ -87,7 +87,7 @@ export default function EventManager() {
       setLoading(true);
       setMsg("");
       try {
-        const res = await axios.get("/api/events");
+        const res = await api.get("/admin/events");
         const data = Array.isArray(res.data)
           ? res.data
           : res.data?.data ?? res.data ?? [];
@@ -156,7 +156,7 @@ export default function EventManager() {
     setMsg("");
 
     try {
-      const res = await axios.get(`/api/events/${id}`);
+      const res = await api.get(`/events/${id}`);
       const payload = res?.data?.data ?? res?.data ?? null;
       setCurrent(normalizeEvent(payload));
     } catch (err) {
@@ -182,7 +182,7 @@ export default function EventManager() {
     setMsg("");
 
     try {
-      const res = await axios.get(`/api/events/${id}`);
+      const res = await api.get(`/events/${id}`);
       const payload = res?.data?.data ?? res?.data ?? {};
       const n = normalizeEvent(payload);
       // derive HH:MM from n.end if available
@@ -290,7 +290,7 @@ export default function EventManager() {
 
       if (mode === "create") {
         // POST /api/events (no id in body)
-        const res = await axios.post("/api/events", payload);
+        const res = await api.post("/events", payload);
         const created = res?.data?.data ?? res?.data ?? payload;
 
         // If backend returns an event with id, use it; else create frontend id
@@ -300,7 +300,7 @@ export default function EventManager() {
         setEvents((prev) => [createdNormalized, ...prev]);
       } else {
         // edit - PUT /api/events/:id (we include id in URL but not in body)
-        await axios.put(`/api/events/${current.id}`, payload).catch((e) => {
+        await api.put(`/events/${current.id}`, payload).catch((e) => {
           // allow fallback if PUT fails
           console.warn("PUT failed; fallback to local update", e);
         });
@@ -343,7 +343,7 @@ export default function EventManager() {
   const remove = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa sự kiện này?")) return;
     try {
-      await axios.delete(`/api/events/${id}`).catch((e) => {
+      await api.delete(`/events/${id}`).catch((e) => {
         console.warn("DELETE API may have failed - apply local remove", e);
       });
       setEvents((prev) => prev.filter((ev) => String(ev.id) !== String(id)));

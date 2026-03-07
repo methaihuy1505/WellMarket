@@ -15,6 +15,8 @@ class MessageAttachment extends Model
     protected $casts = [
         'file_order' => 'integer',
         'created_at' => 'datetime',
+        'updated_at'   => 'datetime',
+
     ];
 
     public function message(): BelongsTo

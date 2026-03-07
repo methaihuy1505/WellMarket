@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import api from "../../utils/api";
 
 /**
  * AccountManager (API-only)
@@ -14,34 +14,17 @@ import axios from "axios";
 
 const safeArr = (a) => (Array.isArray(a) ? a : []);
 
-const normalize = (o = {}) => ({
-  id: o.id ?? null,
-  name: o.name ?? o.fullName ?? o.username ?? "",
-  email: o.email ?? "",
-  phone: o.phone ?? o.mobile ?? "",
-  status: o.status ?? o.state ?? "",
-  role: o.role ?? "user",
-  createdAt: o.createdAt ?? o.created_at ?? o.created ?? null,
-  avatar: o.avatar ?? "/mnt/data/ea3bee50-9964-4c5b-a139-dd78dc24dfb3.png",
-  coins: Number(o.coins ?? o.wallet ?? 0),
-  ...o,
-});
-
-export default function AccountManager() {
+export default function AccountManager({ accounts: initialAccounts }) {
   const [tab, setTab] = useState("accounts");
-
-  // start empty — no mock data
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState(initialAccounts || []);
   const [reports, setReports] = useState([]);
   const [blocked, setBlocked] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [listMsg, setListMsg] = useState("");
-
   const [search, setSearch] = useState("");
   const searchRef = useRef(null);
 
-  // modal / detail states
   const [modalOpen, setModalOpen] = useState(false);
   const [detail, setDetail] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -49,47 +32,28 @@ export default function AccountManager() {
   const [detailMsg, setDetailMsg] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // fetch lists from API on mount
+  // fetch reports + blocked khi mount
   useEffect(() => {
     const fetchLists = async () => {
       setLoading(true);
-      setListMsg("");
       try {
-        const [accRes, repRes, blkRes] = await Promise.all([
-          axios.get("/api/accounts"),
-          axios.get("/api/reports"),
-          axios.get("/api/blocked"),
+        const [repRes, incRes] = await Promise.all([
+          api.get("/admin/accounts/reported"),
+          api.get("/admin/accounts/inactive"),
         ]);
-
-        const accData = Array.isArray(accRes.data)
-          ? accRes.data
-          : accRes.data?.data ?? accRes.data?.result ?? null;
-        const repData = Array.isArray(repRes.data)
-          ? repRes.data
-          : repRes.data?.data ?? repRes.data?.result ?? null;
-        const blkData = Array.isArray(blkRes.data)
-          ? blkRes.data
-          : blkRes.data?.data ?? blkRes.data?.result ?? null;
-
-        setAccounts(Array.isArray(accData) ? accData.map(normalize) : []);
-        setReports(Array.isArray(repData) ? repData : []);
-        setBlocked(Array.isArray(blkData) ? blkData : []);
+        setReports(repRes.data);
+        setBlocked(incRes.data);
       } catch (err) {
         console.warn("List fetch failed:", err);
         setListMsg("Không thể tải dữ liệu từ API — danh sách trống.");
-        // leave accounts/reports/blocked as empty arrays
-        setAccounts([]);
-        setReports([]);
-        setBlocked([]);
       } finally {
         setLoading(false);
       }
     };
-
     fetchLists();
   }, []);
 
-  // filtered accounts for search
+  // lọc theo search
   const filteredAccounts = safeArr(accounts).filter((a) => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -104,136 +68,75 @@ export default function AccountManager() {
     );
   });
 
-  // view details: prefer API; fallback to local list item if API fails
+  // chi tiết
   const viewDetails = async (id) => {
     setModalOpen(true);
     setIsEditing(false);
     setDetail(null);
     setDetailMsg("");
     setLoadingDetail(true);
-
     try {
-      const res = await axios.get(`/api/accounts/${id}`);
-      const payload = res?.data?.data ?? res?.data ?? null;
-      setDetail(normalize(payload));
+      const res = await api.get(`/admin/accounts/${id}`);
+      setDetail(res.data);
     } catch (err) {
-      console.warn("GET detail failed - fallback to local", err);
-      setDetailMsg(
-        "Không lấy được từ API — hiển thị dữ liệu từ danh sách (nếu có)."
-      );
-      const local =
-        safeArr(accounts).find((a) => Number(a.id) === Number(id)) ?? {};
-      setDetail(normalize(local));
+      setDetailMsg("Không lấy được từ API — fallback dữ liệu local.");
+      const local = accounts.find((a) => Number(a.id) === Number(id)) || {};
+      setDetail(local);
     } finally {
       setLoadingDetail(false);
     }
   };
 
-  // open edit: prefer API; fallback to local
+  // edit
   const openEdit = async (id) => {
     setModalOpen(true);
     setIsEditing(true);
     setDetail(null);
-    setDetailMsg("");
     setLoadingDetail(true);
-
     try {
-      const res = await axios.get(`/api/accounts/${id}`);
-      const payload = res?.data?.data ?? res?.data ?? {};
-      setDetail({ ...normalize(payload), password: "" });
+      const res = await api.get(`/admin/accounts/${id}`);
+      setDetail({ ...res.data, password: "" });
     } catch (err) {
-      console.warn("GET for edit failed - using local", err);
-      setDetailMsg(
-        "Không lấy được từ API — đang chỉnh sửa dữ liệu từ danh sách."
-      );
-      const local =
-        safeArr(accounts).find((a) => Number(a.id) === Number(id)) ?? {};
-      setDetail({ ...normalize(local), password: "" });
+      setDetailMsg("Không lấy được từ API — fallback dữ liệu local.");
+      const local = accounts.find((a) => Number(a.id) === Number(id)) || {};
+      setDetail({ ...local, password: "" });
     } finally {
       setLoadingDetail(false);
     }
   };
 
-  // save edit: try PUT, on success update list; on fail apply local update
+  // save edit
   const saveEdit = async () => {
     if (!detail) return;
-    if (!detail.name?.trim() || !detail.email?.trim()) {
-      alert("Tên và Email không được để trống.");
-      return;
-    }
-
     setSaving(true);
     try {
-      const payload = {
-        name: detail.name,
-        email: detail.email,
-        phone: detail.phone,
-        role: detail.role,
-        coins: Number(detail.coins ?? 0),
-      };
-      if (detail.password && detail.password.trim())
-        payload.password = detail.password;
-
-      const res = await axios.put(`/api/accounts/${detail.id}`, payload);
-      const updated = res?.data?.data ?? res?.data ?? payload;
+      const res = await api.put(`/admin/accounts/${detail.id}`, detail);
+      const updated = res.data;
       setAccounts((prev) =>
-        prev.map((a) =>
-          Number(a.id) === Number(detail.id)
-            ? normalize({ ...a, ...updated })
-            : a
-        )
+        prev.map((a) => (a.id === updated.id ? updated : a))
       );
       setModalOpen(false);
       setDetail(null);
       setIsEditing(false);
     } catch (err) {
-      console.warn("PUT failed - applying local update", err);
-      setAccounts((prev) =>
-        prev.map((a) =>
-          Number(a.id) === Number(detail.id)
-            ? {
-                ...a,
-                name: detail.name,
-                email: detail.email,
-                phone: detail.phone,
-                role: detail.role,
-                coins: Number(detail.coins ?? 0),
-              }
-            : a
-        )
-      );
-      setModalOpen(false);
-      setDetail(null);
-      setIsEditing(false);
+      console.warn("PUT failed", err);
     } finally {
       setSaving(false);
     }
   };
 
-  // delete: try API, fallback local removal
+  // delete
   const deleteAccount = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa tài khoản này?")) return;
     try {
-      await axios.delete(`/api/accounts/${id}`);
-      setAccounts((prev) => prev.filter((a) => Number(a.id) !== Number(id)));
-      setReports((prev) => prev.filter((r) => r.accountId !== id));
-      setBlocked((prev) => prev.filter((b) => Number(b.id) !== Number(id)));
+      await api.delete(`/admin/accounts/${id}`);
+      setAccounts((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
-      console.warn("DELETE failed - removing locally", err);
-      setAccounts((prev) => prev.filter((a) => Number(a.id) !== Number(id)));
-      setReports((prev) => prev.filter((r) => r.accountId !== id));
-      setBlocked((prev) => prev.filter((b) => Number(b.id) !== Number(id)));
+      console.warn("DELETE failed", err);
     }
   };
 
-  const fmtDate = (iso) => {
-    if (!iso) return "-";
-    try {
-      return new Date(iso).toLocaleString();
-    } catch {
-      return iso;
-    }
-  };
+  const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString() : "-");
 
   return (
     <div>

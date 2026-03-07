@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MiniGameType extends Model
 {
-
+    protected $table    = 'minigame_types';
     protected $fillable = [
         'name',
         'description',
@@ -15,6 +15,8 @@ class MiniGameType extends Model
 
     protected $casts = [
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+
         'rule'       => 'array',
     ];
 
